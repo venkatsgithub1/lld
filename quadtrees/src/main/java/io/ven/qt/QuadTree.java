@@ -3,6 +3,7 @@ package io.ven.qt;
 import java.util.ArrayList;
 import java.util.List;
 
+// for 200, 200 rectangle x, y = 100, 100 are the center respectively.
 public class QuadTree {
     private final List<Point> points;
     private final Boundary boundary;
