@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 // for 200, 200 rectangle x, y = 100, 100 are the center respectively.
+// Current quad tree implementation has the capability to find points, or a point
+// that needs to be removed.
+// If we want to simulate a pointed hit, it will be 2 step
+// for a given x, y, 0, 0 find all points, allow player to choose a point
+// they want to have removed.
 public class QuadTree {
     private final List<Point> points;
     private final Boundary boundary;
@@ -24,10 +29,10 @@ public class QuadTree {
         double newY = boundary.y;
         double newW = boundary.w / 2;
         double newH = boundary.h / 2;
-        QuadTree nw = new QuadTree(new Boundary(newX - newW, newY + newH, newW, newH));
-        QuadTree ne = new QuadTree(new Boundary(newX + newW, newY + newH, newW, newH));
-        QuadTree sw = new QuadTree(new Boundary(newX - newW, newY - newH, newW, newH));
-        QuadTree se = new QuadTree(new Boundary(newX + newW, newY - newH, newW, newH));
+        nw = new QuadTree(new Boundary(newX - newW, newY + newH, newW, newH));
+        ne = new QuadTree(new Boundary(newX + newW, newY + newH, newW, newH));
+        sw = new QuadTree(new Boundary(newX - newW, newY - newH, newW, newH));
+        se = new QuadTree(new Boundary(newX + newW, newY - newH, newW, newH));
         divided = true;
     }
 
@@ -43,5 +48,22 @@ public class QuadTree {
             subdivide();
         }
         return nw.insert(p) || ne.insert(p) || sw.insert(p) || se.insert(p);
+    }
+
+    public List<Point> query(Boundary range) {
+        if (!this.boundary.intersects(range)) {
+            return List.of();
+        }
+
+        List<Point> pointsFound = new ArrayList<>(points);
+
+        if (this.divided) {
+            pointsFound.addAll(nw.query(range));
+            pointsFound.addAll(ne.query(range));
+            pointsFound.addAll(sw.query(range));
+            pointsFound.addAll(se.query(range));
+        }
+
+        return pointsFound;
     }
 }
