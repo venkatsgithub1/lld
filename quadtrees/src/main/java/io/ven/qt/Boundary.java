@@ -16,4 +16,9 @@ public class Boundary {
     public boolean contains(Point p2) {
         return p2.x >= this.x - w && p2.x <= this.x + w && p2.y >= this.y - h && p2.y <= this.y + h;
     }
+
+    public boolean intersects(Boundary range) {
+        return !(range.x + range.w > this.x + this.w || range.x - range.w < this.x - this.w ||
+                range.y + range.h > this.y + this.h || range.y - range.h < this.y - this.h);
+    }
 }
