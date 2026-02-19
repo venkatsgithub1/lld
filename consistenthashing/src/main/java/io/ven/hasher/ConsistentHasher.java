@@ -4,7 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-// TODO: Add testing logic.
+// TODO: Add testing logic along with data logic.
 public class ConsistentHasher<T> {
     private final TreeMap<Long, T> ring = new TreeMap<>();
     private final int numReplicas;
