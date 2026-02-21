@@ -13,5 +13,8 @@ public class Main {
         ConsistentHasher<PhysicalServer> consistentHasher = new ConsistentHasher<>(replicationFactor, nodeList);
         DistributedSystemManager distributedSystemManager = new DistributedSystemManager(consistentHasher, replicationFactor);
         distributedSystemManager.putData("Homer simpson", "Springfield");
+
+        consistentHasher.putData("Bart simpson", "Springfield", 3);
+        System.out.println("Got " + consistentHasher.getData("Bart simpson", 3));
     }
 }
