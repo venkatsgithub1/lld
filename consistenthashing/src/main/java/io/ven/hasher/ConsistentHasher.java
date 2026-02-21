@@ -5,7 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 // TODO: Add testing logic along with data logic.
-public class ConsistentHasher<T> {
+public class ConsistentHasher<T extends StorageNode> {
     private final TreeMap<Long, T> ring = new TreeMap<>();
     private final int numReplicas;
 
@@ -70,5 +70,23 @@ public class ConsistentHasher<T> {
             throw new RuntimeException(e);
         }
         return res;
+    }
+
+    public void putData(String key, String value, int replicationFactor) {
+        List<T> nodes = this.getReplicaList(key, replicationFactor);
+        for (T node : nodes) {
+            node.put(key, value);
+        }
+    }
+
+    public String getData(String key, int replicationFactor) {
+        List<T> replicaList = getReplicaList(key, replicationFactor);
+        for (T node : replicaList) {
+            String value = node.get(key);
+            if (value != null) {
+                return value;
+            }
+        }
+        return null;
     }
 }
